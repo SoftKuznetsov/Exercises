@@ -18,5 +18,13 @@
     <ClCompile Include="ConsoleApplication2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="My_string.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="My_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
