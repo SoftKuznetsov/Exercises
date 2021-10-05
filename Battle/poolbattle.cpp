@@ -2,10 +2,11 @@
 #include "ui_poolbattle.h"
 #include <QMessageBox>
 
-PoolBattle::PoolBattle(QWidget *parent) :
+PoolBattle::PoolBattle(QTcpSocket * sock, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PoolBattle)
 {
+    my_socket = sock;
     ui->setupUi(this);
     ui->tableWidget_2->setEnabled(false);
 }
@@ -19,7 +20,7 @@ void PoolBattle::on_tableWidget_cellClicked(int row, int column)
 {
     QTableWidgetItem * itm = new QTableWidgetItem();
     itm = ui->tableWidget->currentItem();
-    if (itm) {
+    if (itm != nullptr) {
         if (itm->background() == Qt::green)
             return;
     }
@@ -43,5 +44,31 @@ void PoolBattle::on_pushButton_released()
     }
 
     ui->tableWidget_2->setEnabled(true);
+}
+
+
+void PoolBattle::on_tableWidget_2_cellClicked(int row, int column)
+{
+    // send request
+    QByteArray buff;
+    buff.resize(2);
+    buff[0] = row;
+    buff[1] = column;
+//    QString str = QString::number(row) + QString::number(column);
+//    my_socket->write(str.data(), str.length());
+    my_socket->write(buff);
+
+    // read response
+    // show result
+
+    QTableWidgetItem * item = new QTableWidgetItem();
+
+    // test analysis pool of ship oponent
+    if (ships.isFullCell(row, column))
+        item->setBackground(Qt::blue);
+    else
+        item->setBackground(Qt::red);
+
+    ui->tableWidget_2->setItem(row, column, item);
 }
 

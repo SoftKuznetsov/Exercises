@@ -2,40 +2,56 @@
 #include <QDebug>
 #include <QCoreApplication>
 
-MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent) {
-    server = new QTcpServer(this);
+MyTcpServer::MyTcpServer(QObject *parent) : QTcpServer(parent) {}
 
-    connect(server, &QTcpServer::newConnection, this, &MyTcpServer::slotNewConnection);
+void MyTcpServer::start() {
+    connect(this, &QTcpServer::newConnection, this, &MyTcpServer::newConnection);
 
-    if(!server->listen(QHostAddress::Any, 6000)){
-        qDebug() << "server is not started";
-    } else {
+    if(this->listen(QHostAddress::Any, 6000)){
         qDebug() << "server is started";
+    } else {
+        qDebug() << "server is not started";
     }
 }
 
-void MyTcpServer::slotNewConnection()
-{
-    socket = server->nextPendingConnection();
-
-    socket->write("Hello, World!!! I am echo server!\r\n");
-
-    connect(socket, &QTcpSocket::readyRead, this, &MyTcpServer::slotServerRead);
-    connect(socket, &QTcpSocket::disconnected, this, &MyTcpServer::slotClientDisconnected);
+void MyTcpServer::newConnection() {
+    while (this->hasPendingConnections())
+        appendToSocketList(this->nextPendingConnection());
 }
 
-void MyTcpServer::slotServerRead()
-{
-    while(socket->bytesAvailable()>0)
-    {
-        QByteArray array = socket->readAll();
+void MyTcpServer::appendToSocketList(QTcpSocket* sock) {
+    socket = sock;
 
-        // echo
-        socket->write(array);
+    connect(socket, &QTcpSocket::readyRead, this, &MyTcpServer::socketRead);
+    connect(socket, &QTcpSocket::disconnected, this, &MyTcpServer::socketDisconnect);
+
+    qDebug() << "client connected!";
+    socket->write("connect success!");
+}
+
+//void MyTcpServer::incomingConnection(int socket_desriptor) {
+//    socket = new QTcpSocket(this);
+//    socket->setSocketDescriptor(socket_desriptor);
+
+//    socket->write("You are connect!\r\n");
+//    qDebug() << "client connected!";
+
+//    connect(socket, SIGNAL(readyRead()), this, SLOT(socketReady));
+//    connect(socket, SIGNAL(disconnected()), this, SLOT(socketDisconnect));
+//}
+
+void MyTcpServer::socketRead() {
+    while(socket->bytesAvailable()>0) {
+        message = socket->readAll();
+        qDebug() << message;
     }
 }
 
-void MyTcpServer::slotClientDisconnected()
-{
-    socket->close();
+void MyTcpServer::socketDisconnect() {
+    qDebug() << "disconnect";
+    socket->deleteLater();
+}
+
+QTcpSocket* MyTcpServer::getSocket() {
+    return socket;
 }

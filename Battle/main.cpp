@@ -12,7 +12,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    MyTcpServer server;
-
     return a.exec();
 }

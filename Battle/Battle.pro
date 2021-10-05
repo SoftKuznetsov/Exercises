@@ -12,12 +12,14 @@ SOURCES += \
     board.cpp \
     main.cpp \
     mainwindow.cpp \
+    mytcpclient.cpp \
     mytcpserver.cpp \
     poolbattle.cpp
 
 HEADERS += \
     board.h \
     mainwindow.h \
+    mytcpclient.h \
     mytcpserver.h \
     poolbattle.h
 

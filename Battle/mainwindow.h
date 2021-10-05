@@ -2,7 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
 #include "poolbattle.h"
+#include "mytcpclient.h"
+#include "mytcpserver.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,6 +20,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void writeMessage();
+
 private slots:
     void on_pushButtonCreate_released();
 
@@ -24,5 +30,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     PoolBattle * window;
+
+    MyTcpClient * client;
+    MyTcpServer * server;
 };
 #endif // MAINWINDOW_H

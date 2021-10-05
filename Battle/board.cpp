@@ -60,6 +60,9 @@ result_e Ship::checkShips() {
     return RESULT_OK;
 }
 
+bool Ship::isFullCell(int x, int y) {
+    return board[x][y];
+}
 
 // private
 // ----------------------------------------------

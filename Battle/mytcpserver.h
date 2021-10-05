@@ -5,20 +5,24 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
-class MyTcpServer : public QObject {
+class MyTcpServer : public QTcpServer {
     Q_OBJECT
 
 public:
-    explicit MyTcpServer(QObject * parent = 0);
+    explicit MyTcpServer(QObject * parent = 0);    
 
 public slots:
-    void slotNewConnection();
-    void slotServerRead();
-    void slotClientDisconnected();
+    void start();
+    void newConnection();
+    void appendToSocketList(QTcpSocket* sock);
+//    void incomingConnection(int socket_desriptor);
+    void socketRead();
+    void socketDisconnect();
 
+    QTcpSocket* getSocket();
 private:
-    QTcpServer * server;
     QTcpSocket * socket;
+    QByteArray message;
 };
 
 #endif // MYTCPSERVER_H

@@ -15,7 +15,7 @@ public:
     result_e setCell(int, int);
     result_e clearCell(int, int);
     result_e checkShips();
-
+    bool isFullCell(int x, int y);
 private:
     int board[SIZE_BOARD][SIZE_BOARD];
     const int ships_for_game[5] = {0, 4, 3, 2, 1};
